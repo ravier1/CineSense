@@ -5,6 +5,10 @@ import mongoose from 'mongoose';
 import axios from 'axios';
 import Groq from 'groq-sdk';
 import dotenv from 'dotenv';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
+import User from './models/User.js';
 
 dotenv.config();
 
@@ -14,6 +18,36 @@ app.use(cors());
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret';
+
+// Nodemailer setup
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
+const sendOTPEmail = async (email, otp) => {
+  if (!process.env.EMAIL_USER || process.env.EMAIL_USER === 'your_email@gmail.com') {
+    console.log(`[MOCK EMAIL] To: ${email}, OTP: ${otp}`);
+    return;
+  }
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'CineSense - Verify Your Account',
+    text: `Your OTP for CineSense registration is: ${otp}. It expires in 10 minutes.`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error('Email send error:', error);
+  }
+};
 
 // Cached MongoDB connection
 let cachedConnection = null;
@@ -106,6 +140,86 @@ app.post('/api/critic', async (req, res) => {
   } catch (error) {
     console.error('Groq AI error:', error);
     return res.status(500).json({ error: 'Failed to generate review' });
+  }
+});
+
+// --- AUTH ROUTES ---
+
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    let user = await User.findOne({ email });
+    if (user && user.isVerified) {
+      return res.status(400).json({ error: 'User already exists and is verified' });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    if (user) {
+      user.password = hashedPassword;
+      user.otp = otp;
+      user.otpExpires = otpExpires;
+    } else {
+      user = new User({
+        email,
+        password: hashedPassword,
+        otp,
+        otpExpires
+      });
+    }
+
+    await user.save();
+    await sendOTPEmail(email, otp);
+
+    res.json({ message: 'OTP sent to email' });
+  } catch (error) {
+    console.error('Register error:', error);
+    res.status(500).json({ error: 'Registration failed' });
+  }
+});
+
+app.post('/api/auth/verify-otp', async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    const user = await User.findOne({ email, otp, otpExpires: { $gt: new Date() } });
+
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid or expired OTP' });
+    }
+
+    user.isVerified = true;
+    user.otp = undefined;
+    user.otpExpires = undefined;
+    await user.save();
+
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '7d' });
+    res.json({ token, user: { email: user.email } });
+  } catch (error) {
+    res.status(500).json({ error: 'Verification failed' });
+  }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user || !user.isVerified) {
+      return res.status(400).json({ error: 'Invalid credentials or user not verified' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '7d' });
+    res.json({ token, user: { email: user.email } });
+  } catch (error) {
+    res.status(500).json({ error: 'Login failed' });
   }
 });
 
