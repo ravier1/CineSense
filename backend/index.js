@@ -120,6 +120,36 @@ app.get('/api/tv/trending', async (req, res) => {
   }
 });
 
+app.get('/api/tv/popular', async (req, res) => {
+  try {
+    await connectToDatabase();
+    const apiKey = process.env.TMDB_API_KEY;
+    if (!apiKey) return res.status(500).json({ error: 'TMDB API key is missing' });
+    const response = await axios.get('https://api.themoviedb.org/3/tv/popular', {
+      params: { api_key: apiKey },
+    });
+    return res.json(response.data);
+  } catch (error) {
+    console.error('TMDB tv popular error:', error);
+    return res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
+app.get('/api/movies/upcoming', async (req, res) => {
+  try {
+    await connectToDatabase();
+    const apiKey = process.env.TMDB_API_KEY;
+    if (!apiKey) return res.status(500).json({ error: 'TMDB API key is missing' });
+    const response = await axios.get('https://api.themoviedb.org/3/movie/upcoming', {
+      params: { api_key: apiKey },
+    });
+    return res.json(response.data);
+  } catch (error) {
+    console.error('TMDB upcoming error:', error);
+    return res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
 app.get('/api/movies/search', async (req, res) => {
   try {
     await connectToDatabase();

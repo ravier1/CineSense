@@ -51,6 +51,16 @@ class MovieRepository {
     }
   }
 
+  Future<List<Movie>> fetchUpcomingMovies() async {
+    try {
+      final response = await _dio.get('$_baseUrl/movies/upcoming');
+      final List<dynamic> results = response.data['results'];
+      return results.map((json) => Movie.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to load upcoming movies: $e');
+    }
+  }
+
   Future<List<Movie>> searchMovies(String query) async {
     try {
       final response = await _dio.get(
