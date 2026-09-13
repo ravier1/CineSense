@@ -75,6 +75,51 @@ app.get('/api/movies/trending', async (req, res) => {
   }
 });
 
+app.get('/api/movies/popular', async (req, res) => {
+  try {
+    await connectToDatabase();
+    const apiKey = process.env.TMDB_API_KEY;
+    if (!apiKey) return res.status(500).json({ error: 'TMDB API key is missing' });
+    const response = await axios.get('https://api.themoviedb.org/3/movie/popular', {
+      params: { api_key: apiKey },
+    });
+    return res.json(response.data);
+  } catch (error) {
+    console.error('TMDB popular error:', error);
+    return res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
+app.get('/api/movies/top-rated', async (req, res) => {
+  try {
+    await connectToDatabase();
+    const apiKey = process.env.TMDB_API_KEY;
+    if (!apiKey) return res.status(500).json({ error: 'TMDB API key is missing' });
+    const response = await axios.get('https://api.themoviedb.org/3/movie/top_rated', {
+      params: { api_key: apiKey },
+    });
+    return res.json(response.data);
+  } catch (error) {
+    console.error('TMDB top-rated error:', error);
+    return res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
+app.get('/api/tv/trending', async (req, res) => {
+  try {
+    await connectToDatabase();
+    const apiKey = process.env.TMDB_API_KEY;
+    if (!apiKey) return res.status(500).json({ error: 'TMDB API key is missing' });
+    const response = await axios.get('https://api.themoviedb.org/3/trending/tv/week', {
+      params: { api_key: apiKey },
+    });
+    return res.json(response.data);
+  } catch (error) {
+    console.error('TMDB tv trending error:', error);
+    return res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
 app.get('/api/movies/search', async (req, res) => {
   try {
     await connectToDatabase();
