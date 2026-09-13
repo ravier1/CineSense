@@ -4,6 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/movie.dart';
 import '../data/movie_repository.dart';
+import '../../reviews/presentation/review_notifier.dart';
+import '../../reviews/presentation/review_sheet.dart';
 
 final aiReviewProvider = StateNotifierProvider.family<AiReviewNotifier, AsyncValue<String>, Movie>((ref, movie) {
   return AiReviewNotifier(ref.watch(movieRepositoryProvider), movie);
@@ -196,6 +198,127 @@ class MovieDetailScreen extends ConsumerWidget {
                         style: const TextStyle(color: Colors.red),
                       ),
                     ),
+
+                  const SizedBox(height: 40),
+                  
+                  // Reviews Section Header
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'User Reviews',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.text,
+                        ),
+                      ),
+                      TextButton.icon(
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) => ReviewSheet(movieId: int.parse(movie.id)),
+                          );
+                        },
+                        icon: const Icon(Icons.edit, color: AppColors.primary, size: 20),
+                        label: const Text(
+                          'Write a Review',
+                          style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  // User Reviews List
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final reviewsAsync = ref.watch(movieReviewsProvider(int.parse(movie.id)));
+                      
+                      return reviewsAsync.when(
+                        loading: () => const Center(child: CircularProgressIndicator(color: AppColors.secondary)),
+                        error: (err, stack) => Text('Error loading reviews: $err', style: const TextStyle(color: Colors.red)),
+                        data: (reviews) {
+                          if (reviews.isEmpty) {
+                            return const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 20),
+                              child: Center(
+                                child: Text(
+                                  'No reviews yet. Be the first to review!',
+                                  style: TextStyle(color: AppColors.muted),
+                                ),
+                              ),
+                            );
+                          }
+                          
+                          return ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: reviews.length,
+                            separatorBuilder: (context, index) => const SizedBox(height: 12),
+                            itemBuilder: (context, index) {
+                              final review = reviews[index];
+                              return Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: AppColors.surface,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          review.userEmail,
+                                          style: const TextStyle(
+                                            color: AppColors.muted,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.secondary.withOpacity(0.1),
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              const Icon(Icons.star, color: AppColors.secondary, size: 14),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                review.rating.toStringAsFixed(0),
+                                                style: const TextStyle(
+                                                  color: AppColors.secondary,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      review.content,
+                                      style: const TextStyle(
+                                        color: AppColors.text,
+                                        height: 1.4,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),

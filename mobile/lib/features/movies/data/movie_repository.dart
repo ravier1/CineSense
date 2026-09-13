@@ -21,6 +21,19 @@ class MovieRepository {
     }
   }
 
+  Future<List<Movie>> searchMovies(String query) async {
+    try {
+      final response = await _dio.get(
+        '$_baseUrl/movies/search',
+        queryParameters: {'query': query},
+      );
+      final List<dynamic> data = response.data;
+      return data.map((json) => Movie.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to search movies: $e');
+    }
+  }
+
   Future<String> fetchAiReview(int movieId, String title) async {
     try {
       final response = await _dio.post(

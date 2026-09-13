@@ -9,6 +9,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import User from './models/User.js';
+import Review from './models/Review.js';
 
 dotenv.config();
 
@@ -102,7 +103,29 @@ app.get('/api/movies/trending', async (req, res) => {
     });
     return res.json(response.data);
   } catch (error) {
-    console.error('TMDB proxy error:', error);
+    console.error('TMDB trending error:', error);
+    return res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
+// TMDB search endpoint
+app.get('/api/movies/search', async (req, res) => {
+  try {
+    const { query } = req.query;
+    const apiKey = process.env.TMDB_API_KEY;
+    if (!apiKey) return res.status(500).json({ error: 'TMDB API key is missing' });
+    if (!query) return res.status(400).json({ error: 'Search query is required' });
+
+    const response = await axios.get('https://api.themoviedb.org/3/search/movie', {
+      params: {
+        api_key: apiKey,
+        query,
+        include_adult: false
+      },
+    });
+    return res.json(response.data);
+  } catch (error) {
+    console.error('TMDB search error:', error);
     return res.status(error.response?.status || 500).json({ error: error.message });
   }
 });
@@ -143,7 +166,48 @@ app.post('/api/critic', async (req, res) => {
   }
 });
 
-// --- AUTH ROUTES ---
+// --- AUTH MIDDLEWARE ---
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) return res.status(401).json({ error: 'Access denied' });
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ error: 'Invalid token' });
+    req.user = user;
+    next();
+  });
+};
+
+// --- REVIEW ROUTES ---
+
+app.post('/api/reviews', authenticateToken, async (req, res) => {
+  try {
+    const { movieId, movieTitle, rating, content } = req.body;
+    const review = new Review({
+      userId: req.user.userId,
+      movieId,
+      movieTitle,
+      rating,
+      content
+    });
+    await review.save();
+    res.json(review);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to save review' });
+  }
+});
+
+app.get('/api/movies/:movieId/reviews', async (req, res) => {
+  try {
+    const { movieId } = req.params;
+    const reviews = await Review.find({ movieId }).populate('userId', 'email').sort({ createdAt: -1 });
+    res.json(reviews);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch reviews' });
+  }
+});
 
 app.post('/api/auth/register', async (req, res) => {
   try {

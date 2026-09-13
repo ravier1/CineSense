@@ -5,6 +5,7 @@ import '../../domain/movie.dart';
 import '../data/movie_repository.dart';
 import 'widgets/movie_card.dart';
 import 'movie_detail_screen.dart';
+import 'search_screen.dart';
 
 final trendingMoviesProvider = FutureProvider<List<Movie>>((ref) async {
   final repository = ref.watch(movieRepositoryProvider);
@@ -41,7 +42,14 @@ class HomeScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SearchScreen(),
+                ),
+              );
+            },
           ),
           IconButton(
             icon: const Icon(Icons.person_outline),
