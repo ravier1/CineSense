@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../domain/movie.dart';
+import '../domain/movie.dart';
 import '../data/movie_repository.dart';
 import '../../reviews/presentation/review_notifier.dart';
 import '../../reviews/presentation/review_sheet.dart';

@@ -265,4 +265,5 @@ app.post('/api/auth/login', async (req, res) => {
   } catch (error) { res.status(500).json({ error: 'Login failed' }); }
 });
 
+export { app };
 export default serverless(app);

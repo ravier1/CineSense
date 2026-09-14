@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../domain/movie.dart';
+import '../domain/movie.dart';
 import '../data/movie_repository.dart';
 import 'widgets/movie_card.dart';
 import 'movie_detail_screen.dart';
@@ -49,7 +49,7 @@ class HomeScreen extends ConsumerWidget {
           'CINESENSE',
           style: TextStyle(
             letterSpacing: 3,
-            fontWeight: FontWeight.black,
+            fontWeight: FontWeight.bold,
             fontSize: 22,
           ),
         ),

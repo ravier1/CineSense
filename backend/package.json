@@ -17,6 +17,8 @@
     "nodemailer": "^6.9.7"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node local.js",
+    "check": "node --check index.js && node --check local.js",
+    "test": "node --test"
   }
 }

@@ -123,3 +123,6 @@ app.*.symbols
 .env.local
 .env.*.local
 *.env
+
+# Node dependencies
+node_modules/
