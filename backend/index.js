@@ -168,13 +168,20 @@ app.get('/api/movies/search', async (req, res) => {
 });
 
 const reviewCache = new Map();
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+let groqClient = null;
+
+function getGroqClient() {
+  if (!process.env.GROQ_API_KEY) return null;
+  if (!groqClient) groqClient = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  return groqClient;
+}
 
 app.post('/api/critic', async (req, res) => {
   try {
-    await connectToDatabase();
     const { movieId, title } = req.body;
     if (!title) return res.status(400).json({ error: 'Movie title is required' });
+    const groq = getGroqClient();
+    if (!groq) return res.status(503).json({ error: 'AI review service is not configured' });
     const cacheKey = movieId ? String(movieId) : title;
     if (reviewCache.has(cacheKey)) return res.json({ review: reviewCache.get(cacheKey), source: 'cache' });
     const completion = await groq.chat.completions.create({

@@ -19,3 +19,22 @@ test('health endpoint responds locally', async () => {
   assert.equal(response.status, 200);
   assert.equal(await response.text(), 'CineSense Backend API is running.');
 });
+
+test('AI review route reports missing configuration without crashing', async () => {
+  const originalApiKey = process.env.GROQ_API_KEY;
+  delete process.env.GROQ_API_KEY;
+
+  try {
+    const response = await fetch(`http://localhost:${server.address().port}/api/critic`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ title: 'Test movie' }),
+    });
+
+    assert.equal(response.status, 503);
+    assert.deepEqual(await response.json(), { error: 'AI review service is not configured' });
+  } finally {
+    if (originalApiKey === undefined) delete process.env.GROQ_API_KEY;
+    else process.env.GROQ_API_KEY = originalApiKey;
+  }
+});
