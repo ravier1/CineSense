@@ -20,6 +20,16 @@ test('health endpoint responds locally', async () => {
   assert.equal(await response.text(), 'CineSense Backend API is running.');
 });
 
+test('API health endpoint does not require external services', async () => {
+  const response = await fetch(`http://localhost:${server.address().port}/api/health`);
+
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), {
+    status: 'ok',
+    service: 'cinesense-backend',
+  });
+});
+
 test('AI review route reports missing configuration without crashing', async () => {
   const originalApiKey = process.env.GROQ_API_KEY;
   delete process.env.GROQ_API_KEY;

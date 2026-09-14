@@ -60,6 +60,10 @@ app.get('/', (req, res) => {
   res.send('CineSense Backend API is running.');
 });
 
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', service: 'cinesense-backend' });
+});
+
 app.get('/api/movies/trending', async (req, res) => {
   try {
     await connectToDatabase();
