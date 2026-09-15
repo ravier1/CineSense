@@ -1,0 +1,7 @@
+import Link from "next/link";
+
+export const dynamic = "force-dynamic";
+
+export default function DashboardPage() {
+  return <main className="dashboard-page"><nav className="nav"><Link className="brand" href="/"><img className="brand-mark" src="/brand/cinesense-mark.svg" alt="" /><span>CineSense</span></Link><div className="dashboard-nav"><span>Good evening, Ravi</span><Link className="button" href="/">Sign out</Link></div></nav><section className="dashboard-hero"><div><div className="eyebrow">Your cinema, in one place</div><h1>What are you watching next?</h1><p className="hero-copy">Your dashboard will bring together your diary, watch plans, live activity, and friends.</p><div className="actions"><Link className="button primary" href="/">Search for a film</Link><Link className="button" href="/">Import Trakt data</Link></div></div><div className="dashboard-stat"><span>THIS YEAR</span><strong>0</strong><p>films logged</p></div></section><section className="dashboard-grid"><article className="dashboard-panel"><div className="panel-label">UP NEXT</div><h2>Your watchlist is waiting.</h2><p>Add films you want to see and plan a cinema visit when the time is right.</p><Link href="/" className="text-link">Browse films →</Link></article><article className="dashboard-panel"><div className="panel-label">FRIEND ACTIVITY</div><h2>Your people will appear here.</h2><p>Follow friends to see plans, live watching, and the films they loved.</p><Link href="/" className="text-link">Find people →</Link></article></section></main>;
+}

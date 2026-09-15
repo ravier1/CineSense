@@ -1,0 +1,12 @@
+{
+  "name": "cinesense",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@11.19.0",
+  "scripts": {
+    "dev": "pnpm --filter @cinesense/web dev",
+    "build": "pnpm --filter @cinesense/web build",
+    "lint": "pnpm --filter @cinesense/web lint",
+    "typecheck": "pnpm --filter @cinesense/web typecheck"
+  }
+}
