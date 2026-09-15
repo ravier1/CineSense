@@ -14,7 +14,7 @@ CineSense is a free, donation-supported social movie and TV diary. Users can imp
 - Watchlist and custom lists
 - Profiles, follows, activity feed, and privacy controls
 - “Plan to watch” activity with optional friend notifications
-- Trakt export import first; Trakt OAuth sync when available
+- Trakt ZIP/JSON export import only; no Trakt API credentials required
 - Shared playback event model for Jellyfin, Trakt, Stremio, and manual logging
 
 ## Deliberately postponed
@@ -52,7 +52,7 @@ A connector sends start/progress/pause/resume/stop/complete events. CineSense up
 
 | Source | First implementation | Activity quality |
 |---|---|---|
-| Trakt | Import export file; OAuth sync later | History, ratings, lists; live state when available through Trakt |
+| Trakt | User-uploaded ZIP/JSON export | History, ratings, watchlist, and lists; no API connection |
 | Jellyfin | Plugin/webhook/API adapter | Live start, pause, progress, stop, completion |
 | Stremio | Trakt-backed sync and CineSense catalog | Watched/continue-watching; direct live progress requires a companion/client integration |
 | Manual | Website controls | Full planned and live session support |
@@ -75,7 +75,7 @@ A connector sends start/progress/pause/resume/stop/complete events. CineSense up
 5. Add watch plans, active sessions, and in-app notifications.
 6. Add Trakt export import and matching/deduplication.
 7. Add Jellyfin adapter.
-8. Add Stremio/Trakt sync and investigate direct client-side scrobbling.
+8. Add Stremio/Trakt-export guidance and investigate direct client-side scrobbling.
 9. Design the mobile apps against the stable API.
 
 ## Legal/product guardrails

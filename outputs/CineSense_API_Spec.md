@@ -102,17 +102,9 @@ Returns active sessions visible to the user and their friends.
 
 ## Trakt
 
-### `POST /imports/trakt/export`
+### `POST /imports/trakt`
 
-Accepts a user-provided Trakt export archive. Imports watched history, ratings, watchlist, and lists after previewing matches and conflicts.
-
-### `POST /integrations/trakt/connect`
-
-Starts Trakt OAuth. Tokens are stored server-side and encrypted.
-
-### `POST /integrations/trakt/sync`
-
-Starts an incremental or full sync for a connected Trakt account.
+Accepts a user-provided Trakt ZIP or JSON export. The first response is a preview containing detected records and matching issues. A confirmed request commits watched history, ratings, watchlist, and lists to CineSense. No Trakt API credentials are used.
 
 ## Social
 

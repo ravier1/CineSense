@@ -1,3 +1,6 @@
+import Image from "next/image";
+import Link from "next/link";
+
 const features = [
   ["✦", "Keep your watch life", "Every movie, episode, rewatch, rating, and review in one calm, personal diary."],
   ["◌", "Share the moment", "Plan a cinema visit or share what you are watching now with the friends you choose."],
@@ -8,7 +11,7 @@ export default function Home() {
   return (
     <main className="shell">
       <nav className="nav" aria-label="Main navigation">
-        <a className="brand" href="/"><img className="brand-mark" src="/brand/cinesense-mark.svg" alt="" /><span>CineSense</span></a>
+        <Link className="brand" href="/"><Image className="brand-mark" src="/brand/cinesense-mark.svg" alt="" width={32} height={32} /><span>CineSense</span></Link>
         <div className="nav-links"><a href="#features">Features</a><a href="#about">About</a><a href="/login">Sign in</a></div>
       </nav>
 

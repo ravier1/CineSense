@@ -9,11 +9,17 @@ export async function GET(request: Request) {
   if (!query) return Response.json({ results: [] });
 
   const apiKey = process.env.TMDB_API_KEY;
-  if (!apiKey) {
+  const readAccessToken = process.env.TMDB_READ_ACCESS_TOKEN;
+  if (!apiKey && !readAccessToken) {
     return Response.json({ results: demoResults.filter((item) => item.title.toLowerCase().includes(query.toLowerCase())), source: "demo" });
   }
 
-  const response = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${encodeURIComponent(apiKey)}&query=${encodeURIComponent(query)}&include_adult=false&page=1`, { next: { revalidate: 3600 } });
+  const url = new URL("https://api.themoviedb.org/3/search/multi");
+  url.searchParams.set("query", query);
+  url.searchParams.set("include_adult", "false");
+  url.searchParams.set("page", "1");
+  if (apiKey && !readAccessToken) url.searchParams.set("api_key", apiKey);
+  const response = await fetch(url, { headers: readAccessToken ? { Authorization: `Bearer ${readAccessToken}` } : undefined, next: { revalidate: 3600 } });
   if (!response.ok) return Response.json({ error: { code: "TMDB_UNAVAILABLE", message: "Movie search is temporarily unavailable." } }, { status: 502 });
   const data = await response.json();
   return Response.json({ results: data.results ?? [], source: "tmdb" });

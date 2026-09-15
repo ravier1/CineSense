@@ -75,6 +75,15 @@ h2 { margin: 0; font-size: 1.55rem; letter-spacing: -0.04em; }
 .form-message { color: var(--accent-strong); font-size: 0.84rem; line-height: 1.45; }
 .auth-switch { margin: 22px 0 0; color: var(--muted); font-size: 0.87rem; text-align: center; }
 .auth-switch a, .text-link { color: var(--accent); }
+.import-card { max-width: 560px; }
+.upload-box { min-height: 130px; display: grid; place-items: center; gap: 10px; padding: 20px; border: 1px dashed #5b4b5e; border-radius: 14px; color: var(--muted); text-align: center; cursor: pointer; background: rgba(14,12,17,0.55); }
+.upload-box:hover { border-color: var(--accent); color: var(--ink); }
+.upload-box input { width: 100%; font-size: 0.78rem; }
+.import-form { display: grid; gap: 16px; }
+.import-summary { padding: 16px; border: 1px solid rgba(155,215,176,0.3); border-radius: 12px; background: rgba(155,215,176,0.08); }
+.import-summary strong { color: var(--green); }
+.import-summary p { color: var(--ink); line-height: 1.5; }
+.import-summary small { color: var(--muted); line-height: 1.45; }
 .dashboard-page { min-height: 100vh; padding: 24px clamp(20px, 5vw, 72px) 72px; }
 .dashboard-nav { display: flex; align-items: center; gap: 18px; color: var(--muted); font-size: 0.82rem; }
 .dashboard-nav .button { padding: 8px 14px; font-size: 0.8rem; }

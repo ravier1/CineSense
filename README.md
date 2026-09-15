@@ -8,7 +8,7 @@ CineSense is a free, donation-supported social movie and TV diary. It combines t
 apps/web                 Next.js website and versioned API
 packages/shared          Shared TypeScript types and validation contracts
 packages/database        Database migrations and Supabase helpers
-packages/integrations    Trakt, Jellyfin, and Stremio adapters
+packages/integrations    Trakt export, Jellyfin, and Stremio adapters
 outputs                  Product, API, and database design documents
 ```
 
