@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getDiscovery, type DiscoveryItem } from "../lib/tmdb-discovery";
+import { MediaCard as PosterMediaCard } from "./components/media-card";
 
 const features = [
   ["✦", "Keep a proper diary", "Log films, episodes, rewatches, ratings, and the small details you want to remember."],
@@ -7,7 +9,18 @@ const features = [
   ["↗", "Bring your history", "Start with your Trakt export, then keep everything together across your streaming services and media servers."],
 ];
 
-export default function Home() {
+function MediaCard({ item }: { item: DiscoveryItem }) {
+  return <PosterMediaCard item={item} />;
+}
+
+function MediaSection({ title, description, items }: { title: string; description: string; items: DiscoveryItem[] }) {
+  if (!items.length) return null;
+  return <section className="media-section"><div className="section-heading"><div><h2>{title}</h2><p>{description}</p></div><Link className="text-link" href="/signup">Save your picks →</Link></div><div className="media-grid">{items.map((item) => <MediaCard item={item} key={`${item.kind}-${item.id}`} />)}</div></section>;
+}
+
+export default async function Home() {
+  const discovery = await getDiscovery();
+
   return (
     <main className="shell">
       <nav className="nav" aria-label="Main navigation">
@@ -20,7 +33,7 @@ export default function Home() {
           <div className="eyebrow">A home for your film diary</div>
           <h1>Remember what you watched.</h1>
           <p className="hero-copy">Keep a record of the films and shows you love, where you saw them, and who you shared them with.</p>
-          <div className="actions"><a className="button primary" href="/signup">Start your diary</a><a className="button" href="#features">Take a look around</a></div>
+          <div className="actions"><a className="button primary" href="/signup">Start your diary</a><a className="button" href="#discover">Browse films and shows</a></div>
         </div>
 
         <aside className="dashboard-card" aria-label="Example current viewing card">
@@ -36,6 +49,8 @@ export default function Home() {
           <div className="card-meta"><span>PVR Nexus, Koramangala · Bengaluru</span><span>Screen 4 · 1.90:1</span><span className="tech-badge" aria-label="IMAX Laser"><strong>IMAX</strong><small>Laser</small></span></div>
         </aside>
       </section>
+
+      <div className="discovery-sections public-discovery" id="discover"><MediaSection title="Trending this week" description="What people are watching right now." items={discovery.trending} /><MediaSection title="Popular movies" description="Films getting added to watchlists." items={discovery.movies} /><MediaSection title="Popular shows" description="Series worth making time for." items={discovery.shows} /></div>
 
       <section className="section" id="features">
         <div className="section-heading"><div><h2>Made for the way you actually watch.</h2><p>Keep it personal, share what you want, and add detail when it matters.</p></div></div>

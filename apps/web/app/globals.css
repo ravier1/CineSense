@@ -131,11 +131,15 @@ h2 { margin: 0; font-size: 1.45rem; letter-spacing: -0.04em; }
 .media-section { margin-top: 52px; }
 .media-section:first-child { margin-top: 0; }
 .media-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; }
-.media-card { min-width: 0; }
-.media-poster { position: relative; aspect-ratio: 2 / 3; overflow: hidden; border: 1px solid var(--line); border-radius: 11px; display: grid; place-items: center; padding: 16px; color: var(--muted); background: var(--panel-soft); text-align: center; }
+.media-card { min-width: 0; display: block; color: inherit; text-decoration: none; }
+.media-poster { position: relative; aspect-ratio: 2 / 3; overflow: hidden; border: 1px solid var(--line); border-radius: 11px; display: grid; place-items: center; padding: 16px; color: var(--muted); background: var(--panel-soft); text-align: center; transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease; }
+.media-poster::after { position: absolute; z-index: 1; inset: 0; content: ""; background: transparent; transition: background-color 180ms ease; pointer-events: none; }
 .media-poster img { object-fit: cover; transition: transform 220ms ease; }
-.media-card:hover .media-poster img { transform: scale(1.03); }
-.media-rating { position: absolute; z-index: 1; right: 8px; bottom: 8px; border-radius: 6px; padding: 5px 7px; color: #fff8ff; background: rgba(20, 14, 22, 0.8); font-size: 0.72rem; font-weight: 700; }
+.media-card:hover .media-poster, .media-card:focus-within .media-poster { border-color: var(--poster-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--poster-accent) 30%, transparent), 0 14px 30px var(--shadow); }
+.media-card:hover .media-poster::after, .media-card:focus-within .media-poster::after { background: linear-gradient(180deg, color-mix(in srgb, var(--poster-accent) 20%, transparent), rgba(0, 0, 0, 0.08)); }
+.media-card:hover .media-poster img, .media-card:focus-within .media-poster img { filter: brightness(1.08) saturate(1.16); transform: scale(1.03); }
+.media-card:focus-visible { outline: 2px solid var(--poster-accent); outline-offset: 5px; border-radius: 12px; }
+.media-rating { position: absolute; z-index: 2; right: 8px; bottom: 8px; border-radius: 6px; padding: 5px 7px; color: #fff8ff; background: rgba(20, 14, 22, 0.8); font-size: 0.72rem; font-weight: 700; }
 .media-card h3 { overflow: hidden; margin: 10px 0 3px; font-size: 0.9rem; letter-spacing: -0.02em; text-overflow: ellipsis; white-space: nowrap; }
 .media-card p { margin: 0; color: var(--muted); font-size: 0.75rem; }
 @media (max-width: 1000px) { .media-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }

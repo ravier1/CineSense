@@ -2,12 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Route } from "next";
 import { SignOutButton } from "../components/sign-out-button";
+import { MediaCard as PosterMediaCard } from "../components/media-card";
 import { getDiscovery, type DiscoveryItem } from "../../lib/tmdb-discovery";
 
 export const dynamic = "force-dynamic";
 
 function MediaCard({ item }: { item: DiscoveryItem }) {
-  return <article className="media-card"><div className="media-poster">{item.posterUrl ? <Image src={item.posterUrl} alt={`${item.title} poster`} fill sizes="(max-width: 700px) 42vw, 170px" /> : <span>{item.title}</span>}<span className="media-rating">★ {item.rating}</span></div><h3>{item.title}</h3><p>{item.year || "Coming soon"} · {item.kind}</p></article>;
+  return <PosterMediaCard item={item} />;
 }
 
 function MediaSection({ title, description, items }: { title: string; description: string; items: DiscoveryItem[] }) {
