@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeToggle } from "./components/theme-toggle";
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: "CineSense — A home for your film diary",
@@ -10,7 +11,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body><ThemeToggle />{children}</body>
+      <body>
+        <ThemeToggle />
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
