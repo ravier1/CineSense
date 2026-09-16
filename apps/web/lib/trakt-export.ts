@@ -50,7 +50,7 @@ function normalizeRecord(value: unknown, category: TraktImportCategory, sourceFi
   const media = objectValue(item, "movie") ?? objectValue(item, "show") ?? objectValue(item, "episode") ?? item;
   const episode = objectValue(item, "episode");
   const show = objectValue(item, "show");
-  const ids = objectValue(media.ids) ?? {};
+  const ids = media.ids && typeof media.ids === "object" && !Array.isArray(media.ids) ? media.ids as Record<string, unknown> : {};
   const title = stringValue(media.title) ?? stringValue(item.title) ?? stringValue(show?.title);
   if (!title) return undefined;
 

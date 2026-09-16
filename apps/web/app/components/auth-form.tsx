@@ -19,18 +19,26 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
     const supabase = getSupabaseBrowserClient();
 
     if (!supabase) {
-      setMessage("Supabase is not connected yet. Add the values from .env.example to begin.");
+      setMessage("CineSense account services are not connected yet. Check the app environment settings.");
       setBusy(false);
       return;
     }
 
-    const result = mode === "signup"
-      ? await supabase.auth.signUp({ email, password, options: { data: { display_name: displayName } } })
-      : await supabase.auth.signInWithPassword({ email, password });
+    try {
+      const result = mode === "signup"
+        ? await supabase.auth.signUp({ email, password, options: { data: { display_name: displayName }, emailRedirectTo: `${window.location.origin}/auth/callback?next=%2Fdashboard` } })
+        : await supabase.auth.signInWithPassword({ email, password });
 
-    if (result.error) setMessage(result.error.message);
-    else if (mode === "signup" && !result.data.session) setMessage("Check your email to confirm your CineSense account.");
-    else router.push("/dashboard");
+      if (result.error) {
+        const message = result.error.message.toLowerCase().includes("email not confirmed")
+          ? "Please confirm your CineSense email before signing in."
+          : result.error.message;
+        setMessage(message);
+      } else if (mode === "signup" && !result.data.session) setMessage("Check your email to confirm your CineSense account.");
+      else router.push("/dashboard");
+    } catch {
+      setMessage("CineSense could not reach the account service. Check your connection and try again.");
+    }
     setBusy(false);
   }
 

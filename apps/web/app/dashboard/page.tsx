@@ -1,8 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Route } from "next";
+import { SignOutButton } from "../components/sign-out-button";
+import { getDiscovery, type DiscoveryItem } from "../../lib/tmdb-discovery";
 
 export const dynamic = "force-dynamic";
 
-export default function DashboardPage() {
-  return <main className="dashboard-page"><nav className="nav"><Link className="brand" href="/"><Image className="brand-mark" src="/brand/cinesense-mark.svg" alt="" width={32} height={32} /><span>CineSense</span></Link><div className="dashboard-nav"><span>Good evening, Ravi</span><Link className="button" href="/">Sign out</Link></div></nav><section className="dashboard-hero"><div><div className="eyebrow">Your cinema, in one place</div><h1>What are you watching next?</h1><p className="hero-copy">Your dashboard will bring together your diary, watch plans, live activity, and friends.</p><div className="actions"><Link className="button primary" href="/">Search for a film</Link><Link className="button" href="/import/trakt">Import Trakt data</Link></div></div><div className="dashboard-stat"><span>THIS YEAR</span><strong>0</strong><p>films logged</p></div></section><section className="dashboard-grid"><article className="dashboard-panel"><div className="panel-label">UP NEXT</div><h2>Your watchlist is waiting.</h2><p>Add films you want to see and plan a cinema visit when the time is right.</p><Link href="/" className="text-link">Browse films →</Link></article><article className="dashboard-panel"><div className="panel-label">FRIEND ACTIVITY</div><h2>Your people will appear here.</h2><p>Follow friends to see plans, live watching, and the films they loved.</p><Link href="/" className="text-link">Find people →</Link></article></section></main>;
+function MediaCard({ item }: { item: DiscoveryItem }) {
+  return <article className="media-card"><div className="media-poster">{item.posterUrl ? <Image src={item.posterUrl} alt={`${item.title} poster`} fill sizes="(max-width: 700px) 42vw, 170px" /> : <span>{item.title}</span>}<span className="media-rating">★ {item.rating}</span></div><h3>{item.title}</h3><p>{item.year || "Coming soon"} · {item.kind}</p></article>;
+}
+
+function MediaSection({ title, description, items }: { title: string; description: string; items: DiscoveryItem[] }) {
+  if (!items.length) return null;
+  return <section className="media-section"><div className="section-heading"><div><h2>{title}</h2><p>{description}</p></div><Link className="text-link" href="/">See all →</Link></div><div className="media-grid">{items.map((item) => <MediaCard item={item} key={`${item.kind}-${item.id}`} />)}</div></section>;
+}
+
+export default async function DashboardPage() {
+  const discovery = await getDiscovery();
+
+  return <main className="dashboard-page"><nav className="nav"><Link className="brand" href="/"><Image className="brand-mark" src="/brand/cinesense-mark.svg" alt="" width={32} height={32} /><span>CineSense</span></Link><div className="dashboard-nav"><span>Your home</span><SignOutButton /></div></nav><section className="dashboard-hero"><div><div className="eyebrow">Find something to watch</div><h1>A good film is waiting.</h1><p className="hero-copy">Browse what people are watching, keep track of what catches your eye, and make your next choice easier.</p><div className="actions"><Link className="button primary" href="/">Search films and shows</Link><Link className="button" href={"/import/trakt" as Route}>Import Trakt data</Link></div></div><div className="dashboard-stat"><span>THIS YEAR</span><strong>0</strong><p>films logged</p></div></section><div className="discovery-sections"><MediaSection title="Trending this week" description="A few things getting attention right now." items={discovery.trending} /><MediaSection title="Popular movies" description="Films people are adding to their lists." items={discovery.movies} /><MediaSection title="Popular shows" description="Series worth making time for." items={discovery.shows} /></div></main>;
 }

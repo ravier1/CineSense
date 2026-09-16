@@ -30,7 +30,10 @@ Returns diary entries visible to the authenticated user.
   "review": "A concise review.",
   "containsSpoilers": false,
   "venue": "PVR IMAX",
-  "format": "imax",
+  "format": "imax-laser",
+  "screen": "Screen 4",
+  "aspectRatio": "1.90:1",
+  "soundFormat": "dolby-atmos",
   "visibility": "friends"
 }
 ```
@@ -52,7 +55,10 @@ Deletes the user’s diary entry and its associated play record.
   "mediaId": "media_uuid",
   "plannedStart": "2026-09-20T15:00:00Z",
   "venue": "PVR IMAX",
-  "format": "imax",
+  "format": "imax-laser",
+  "screen": "Screen 4",
+  "aspectRatio": "1.90:1",
+  "soundFormat": "dolby-atmos",
   "runtimeSeconds": 9960,
   "visibility": "friends",
   "notifyFriends": true
