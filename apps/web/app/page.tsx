@@ -26,7 +26,7 @@ export default function Home() {
         <aside className="dashboard-card" aria-label="Example current viewing card">
           <div className="card-top"><span>Watching now</span><span className="live-dot">● Live</span></div>
           <a className="poster" href="https://www.youtube.com/watch?v=QqmbrvluQRA" target="_blank" rel="noreferrer" aria-label="Watch the Dune: Part Two official trailer on YouTube"><Image className="poster-image" src="https://image.tmdb.org/t/p/w1280/eZ239CUp1d6OryZEBPnO2n87gMG.jpg" alt="Dune: Part Two desert scene" fill sizes="(max-width: 800px) 100vw, 420px" priority /><div className="poster-title">Dune:<br />Part Two</div><span className="trailer-pill">Watch trailer ↗</span></a>
-          <div className="progress-label"><span>Ravi is watching</span><span>1h 12m of 2h 46m</span></div>
+          <div className="progress-label"><span>midnightreel is watching</span><span>1h 12m of 2h 46m</span></div>
           <div className="progress"><span /><svg className="progress-ornithopter" viewBox="0 0 112 52" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Current viewing position">
             <path d="M42 29L10 14L5 17L33 34L42 29ZM70 29L102 14L107 17L79 34L70 29Z" fill="currentColor" />
             <path d="M36 25C40 18 48 15 56 15C64 15 72 18 76 25L69 38H43L36 25Z" fill="currentColor" />
