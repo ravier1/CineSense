@@ -39,5 +39,5 @@ export function MediaCard({ item }: { item: DiscoveryItem }) {
   const style = { "--poster-accent": posterAccent } as CSSProperties;
   const mediaPath = item.kind === "Series" ? "tv" : "movie";
 
-  return <Link className="media-card" style={style} href={`/title/${mediaPath}/${item.id}`} aria-label={`Open details for ${item.title}`}><div className="media-poster">{item.posterUrl ? <Image src={item.posterUrl} alt={`${item.title} poster`} fill sizes="(max-width: 700px) 42vw, 170px" onLoad={(event) => setPosterAccent(samplePosterColor(event.currentTarget))} /> : <span>{item.title}</span>}<span className="media-rating">&#9733; {item.rating}</span></div><h3>{item.title}</h3><p>{item.year || "Coming soon"} &middot; {item.kind}</p></Link>;
+  return <Link className="media-card" style={style} href={`/title/${mediaPath}/${item.id}`} aria-label={`Open details for ${item.title}`}><div className="media-poster">{item.posterUrl ? <Image src={item.posterUrl} alt={`${item.title} poster`} fill sizes="(max-width: 700px) 42vw, 170px" crossOrigin="anonymous" onLoad={(event) => setPosterAccent(samplePosterColor(event.currentTarget))} /> : <span>{item.title}</span>}<span className="media-rating">&#9733; {item.rating}</span></div><h3>{item.title}</h3><p>{item.year || "Coming soon"} &middot; {item.kind}</p></Link>;
 }

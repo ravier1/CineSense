@@ -97,6 +97,9 @@ h2 { margin: 0; font-size: 1.45rem; letter-spacing: -0.04em; }
 .auth-form label { display: grid; gap: 7px; color: var(--muted); font-size: 0.82rem; }
 .auth-form input { width: 100%; border: 1px solid var(--line); border-radius: 9px; padding: 12px 13px; color: var(--ink); background: var(--background); outline: none; }
 .auth-form input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent); }
+.username-hint { color: var(--muted); font-size: 0.76rem; line-height: 1.35; }
+.username-hint.available { color: var(--green); }
+.username-hint.taken, .username-hint.invalid, .username-hint.unavailable { color: #d47c87; }
 .auth-submit { width: 100%; margin-top: 7px; }
 .form-message { color: var(--accent-strong); font-size: 0.84rem; line-height: 1.45; }
 .auth-switch { margin: 22px 0 0; color: var(--muted); font-size: 0.87rem; text-align: center; }
@@ -128,6 +131,7 @@ h2 { margin: 0; font-size: 1.45rem; letter-spacing: -0.04em; }
 @media (max-width: 800px) { .dashboard-hero, .dashboard-grid { margin-top: 58px; } .dashboard-hero { display: block; } .dashboard-stat { margin-top: 28px; } .dashboard-grid { grid-template-columns: 1fr; } .dashboard-nav span { display: none; } }
 
 .discovery-sections { max-width: 1220px; margin: 74px auto 0; }
+.public-discovery + .section { margin-top: 104px; }
 .media-section { margin-top: 52px; }
 .media-section:first-child { margin-top: 0; }
 .media-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; }
@@ -139,6 +143,9 @@ h2 { margin: 0; font-size: 1.45rem; letter-spacing: -0.04em; }
 .media-card:hover .media-poster::after, .media-card:focus-within .media-poster::after { background: linear-gradient(180deg, color-mix(in srgb, var(--poster-accent) 20%, transparent), rgba(0, 0, 0, 0.08)); }
 .media-card:hover .media-poster img, .media-card:focus-within .media-poster img { filter: brightness(1.08) saturate(1.16); transform: scale(1.03); }
 .media-card:focus-visible { outline: 2px solid var(--poster-accent); outline-offset: 5px; border-radius: 12px; }
+:root[data-theme="light"] .media-card:hover .media-poster, :root[data-theme="light"] .media-card:focus-within .media-poster { border-color: var(--poster-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--poster-accent) 42%, transparent), 0 14px 30px var(--shadow); }
+:root[data-theme="light"] .media-card:hover .media-poster::after, :root[data-theme="light"] .media-card:focus-within .media-poster::after { background: linear-gradient(180deg, color-mix(in srgb, var(--poster-accent) 26%, transparent), rgba(255, 255, 255, 0.08)); }
+:root[data-theme="light"] .media-card:focus-visible { outline-color: var(--poster-accent); }
 .media-rating { position: absolute; z-index: 2; right: 8px; bottom: 8px; border-radius: 6px; padding: 5px 7px; color: #fff8ff; background: rgba(20, 14, 22, 0.8); font-size: 0.72rem; font-weight: 700; }
 .media-card h3 { overflow: hidden; margin: 10px 0 3px; font-size: 0.9rem; letter-spacing: -0.02em; text-overflow: ellipsis; white-space: nowrap; }
 .media-card p { margin: 0; color: var(--muted); font-size: 0.75rem; }
@@ -186,8 +193,22 @@ h2 { margin: 0; font-size: 1.45rem; letter-spacing: -0.04em; }
 .title-diary-section p { margin: 0; }
 .diary-actions { display: flex; min-width: 190px; flex-direction: column; align-items: flex-start; justify-content: center; gap: 12px; }
 .diary-actions span { color: var(--muted); font-size: 0.74rem; }
+.episodes-section { padding-top: 6px; }
+.episodes-section .section-heading { align-items: flex-start; }
+.episodes-section .section-heading p { max-width: 520px; }
+.title-status { flex: 0 0 auto; border: 1px solid var(--line); border-radius: 999px; padding: 7px 10px; color: var(--muted); background: var(--panel); font-size: 0.72rem; font-weight: 700; }
+.title-status.is-live { border-color: color-mix(in srgb, var(--green) 60%, var(--line)); color: var(--green); background: color-mix(in srgb, var(--green) 9%, var(--panel)); }
+.episode-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.episode-card { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+.episode-still { position: relative; aspect-ratio: 16 / 8; background: var(--panel-soft); }
+.episode-still img { object-fit: cover; }
+.episode-copy { padding: 18px; }
+.episode-label { color: var(--accent-strong); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.episode-copy h3 { margin: 8px 0 6px; font-size: 1.05rem; }
+.episode-copy p { margin: 0; color: var(--muted); font-size: 0.78rem; }
+.episode-copy span { display: block; margin-top: 14px; color: var(--muted); font-size: 0.84rem; line-height: 1.5; }
 @media (max-width: 800px) { .title-nav { padding-right: 98px; } .title-nav-links { gap: 12px; font-size: 0.78rem; } .title-hero-inner { grid-template-columns: 130px minmax(0, 1fr); gap: 22px; min-height: 0; padding-top: 34px; } .title-copy h1 { font-size: clamp(2.2rem, 9vw, 4rem); } .title-overview { font-size: 0.9rem; } .title-facts-section { grid-template-columns: 1fr; gap: 26px; } .cast-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } .title-diary-section { display: block; } .diary-actions { margin-top: 22px; } }
-@media (max-width: 520px) { .title-nav-links a:first-child { display: none; } .title-hero-inner { grid-template-columns: 1fr; align-items: start; } .title-poster { width: 150px; } .title-backdrop-shade { background: linear-gradient(0deg, var(--background) 0%, color-mix(in srgb, var(--background) 75%, transparent) 100%); } .title-facts { grid-template-columns: 1fr; } .cast-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; } }
+@media (max-width: 520px) { .title-nav-links a:first-child { display: none; } .title-hero-inner { grid-template-columns: 1fr; align-items: start; } .title-poster { width: 150px; } .title-backdrop-shade { background: linear-gradient(0deg, var(--background) 0%, color-mix(in srgb, var(--background) 75%, transparent) 100%); } .title-facts { grid-template-columns: 1fr; } .cast-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; } .episodes-section .section-heading { display: block; } .title-status { display: inline-block; margin-top: 16px; } .episode-grid { grid-template-columns: 1fr; } }
 
 .donation-page { min-height: 100vh; padding: 24px clamp(20px, 5vw, 72px) 72px; }
 .donation-hero, .donation-card { max-width: 760px; margin-right: auto; margin-left: auto; }

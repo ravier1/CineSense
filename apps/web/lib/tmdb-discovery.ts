@@ -25,11 +25,27 @@ type TmdbVideo = {
   type: string;
 };
 
+type TmdbEpisode = {
+  id: number;
+  name?: string;
+  air_date?: string;
+  episode_number?: number;
+  season_number?: number;
+  overview?: string;
+  still_path?: string | null;
+};
+
 type TmdbDetails = TmdbItem & {
   overview?: string;
   tagline?: string;
   runtime?: number | null;
   episode_run_time?: number[];
+  number_of_seasons?: number;
+  number_of_episodes?: number;
+  status?: string;
+  in_production?: boolean;
+  last_episode_to_air?: TmdbEpisode | null;
+  next_episode_to_air?: TmdbEpisode | null;
   vote_count?: number;
   genres?: { id: number; name: string }[];
   created_by?: TmdbCredit[];
@@ -68,6 +84,21 @@ export type MediaDetails = {
   cast: { id: number; name: string; character: string; profileUrl: string | null }[];
   trailers: { key: string; name: string }[];
   providers: string[];
+  seasonCount: number | null;
+  episodeCount: number | null;
+  status: string;
+  inProduction: boolean;
+  latestEpisode: EpisodeSummary | null;
+  nextEpisode: EpisodeSummary | null;
+};
+
+export type EpisodeSummary = {
+  name: string;
+  airDate: string;
+  seasonNumber: number;
+  episodeNumber: number;
+  overview: string;
+  stillUrl: string | null;
 };
 
 function normalize(items: TmdbItem[], defaultKind: DiscoveryItem["kind"]): DiscoveryItem[] {
@@ -120,6 +151,18 @@ function formatVoteCount(count: number) {
   return new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(count);
 }
 
+function normalizeEpisode(episode: TmdbEpisode | null | undefined): EpisodeSummary | null {
+  if (!episode) return null;
+  return {
+    name: episode.name ?? "Untitled episode",
+    airDate: formatDate(episode.air_date ?? ""),
+    seasonNumber: episode.season_number ?? 0,
+    episodeNumber: episode.episode_number ?? 0,
+    overview: episode.overview ?? "",
+    stillUrl: episode.still_path ? `https://image.tmdb.org/t/p/w500${episode.still_path}` : null,
+  };
+}
+
 export async function getMediaDetails(type: MediaType, id: number): Promise<MediaDetails | null> {
   if (!process.env.TMDB_API_KEY && !process.env.TMDB_READ_ACCESS_TOKEN) {
     if (type === "movie" && id === 693134) {
@@ -142,6 +185,12 @@ export async function getMediaDetails(type: MediaType, id: number): Promise<Medi
         cast: [],
         trailers: [{ key: "QqmbrvluQRA", name: "Official Trailer" }],
         providers: [],
+        seasonCount: null,
+        episodeCount: null,
+        status: "Released",
+        inProduction: false,
+        latestEpisode: null,
+        nextEpisode: null,
       };
     }
     return null;
@@ -175,6 +224,12 @@ export async function getMediaDetails(type: MediaType, id: number): Promise<Medi
       cast: (details.credits?.cast ?? []).slice(0, 12).map((member) => ({ id: member.id, name: member.name, character: member.character ?? "", profileUrl: member.profile_path ? `https://image.tmdb.org/t/p/w185${member.profile_path}` : null })),
       trailers: videos.slice(0, 3).map((video) => ({ key: video.key, name: video.name })),
       providers: providerNames,
+      seasonCount: type === "tv" ? details.number_of_seasons ?? null : null,
+      episodeCount: type === "tv" ? details.number_of_episodes ?? null : null,
+      status: details.status ?? "",
+      inProduction: Boolean(details.in_production),
+      latestEpisode: type === "tv" ? normalizeEpisode(details.last_episode_to_air) : null,
+      nextEpisode: type === "tv" ? normalizeEpisode(details.next_episode_to_air) : null,
     };
   } catch {
     return null;
