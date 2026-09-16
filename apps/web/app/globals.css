@@ -145,6 +145,50 @@ h2 { margin: 0; font-size: 1.45rem; letter-spacing: -0.04em; }
 @media (max-width: 1000px) { .media-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .discovery-sections { margin-top: 54px; } .media-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; } .media-card h3 { font-size: 0.8rem; } }
 
+.title-page { min-height: 100vh; background: var(--background); }
+.title-nav { position: relative; z-index: 3; display: flex; align-items: center; justify-content: space-between; max-width: 1220px; margin: 0 auto; padding: 24px clamp(20px, 5vw, 72px); }
+.title-nav-links { display: flex; gap: 24px; color: var(--muted); font-size: 0.88rem; }
+.title-nav-links a:hover { color: var(--ink); }
+.title-hero { position: relative; min-height: 530px; overflow: hidden; background: var(--panel); }
+.title-backdrop, .title-backdrop-shade { position: absolute; inset: 0; }
+.title-backdrop img { object-fit: cover; opacity: 0.52; filter: saturate(0.85); }
+.title-backdrop-shade { background: linear-gradient(90deg, var(--background) 0%, color-mix(in srgb, var(--background) 78%, transparent) 48%, color-mix(in srgb, var(--background) 44%, transparent) 100%), linear-gradient(0deg, var(--background) 0%, transparent 38%); }
+.title-hero-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 240px minmax(0, 700px); align-items: end; gap: 42px; max-width: 1220px; min-height: 530px; margin: 0 auto; padding: 52px clamp(20px, 5vw, 72px) 64px; }
+.title-poster { position: relative; aspect-ratio: 2 / 3; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; display: grid; place-items: center; color: var(--muted); background: var(--panel-soft); box-shadow: 0 24px 60px var(--shadow); }
+.title-poster img { object-fit: cover; }
+.title-copy h1 { max-width: 760px; margin: 12px 0 10px; font-size: clamp(2.8rem, 6vw, 5.5rem); }
+.title-tagline { margin: 0 0 18px; color: var(--muted); font-size: 1.02rem; font-style: italic; }
+.title-meta, .title-rating { display: flex; align-items: center; flex-wrap: wrap; gap: 9px 14px; color: var(--muted); font-size: 0.82rem; }
+.title-meta span + span::before { margin-right: 14px; color: var(--line); content: "•"; }
+.title-rating { margin-top: 18px; }
+.title-rating strong { color: var(--ink); font-size: 1.08rem; }
+.title-overview { max-width: 680px; margin: 20px 0 0; color: var(--ink); font-size: 1rem; line-height: 1.65; }
+.title-copy .actions { margin-top: 24px; }
+.title-content { max-width: 1220px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 72px) 80px; }
+.title-section { margin-top: 70px; }
+.title-facts-section { display: grid; grid-template-columns: minmax(220px, 0.8fr) 1.2fr; gap: 60px; align-items: start; }
+.title-section h2 { margin-top: 9px; font-size: clamp(1.7rem, 3vw, 2.5rem); }
+.title-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin: 0; }
+.title-facts div { padding-top: 14px; border-top: 1px solid var(--line); }
+.title-facts dt { color: var(--accent-strong); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.title-facts dd { margin: 8px 0 0; color: var(--ink); line-height: 1.45; }
+.cast-section .section-heading { margin-bottom: 20px; }
+.cast-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; }
+.cast-card { min-width: 0; }
+.cast-photo { position: relative; aspect-ratio: 2 / 3; overflow: hidden; border-radius: 10px; display: grid; place-items: center; color: var(--muted); background: var(--panel-soft); }
+.cast-photo img { object-fit: cover; }
+.cast-card strong, .cast-card span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cast-card strong { margin-top: 10px; font-size: 0.84rem; }
+.cast-card span { margin-top: 4px; color: var(--muted); font-size: 0.75rem; }
+.muted-copy { max-width: 650px; color: var(--muted); line-height: 1.65; }
+.title-diary-section { display: flex; justify-content: space-between; gap: 40px; padding: 28px; border: 1px solid var(--line); border-radius: 16px; background: var(--panel); }
+.title-diary-section h2 { margin-bottom: 8px; }
+.title-diary-section p { margin: 0; }
+.diary-actions { display: flex; min-width: 190px; flex-direction: column; align-items: flex-start; justify-content: center; gap: 12px; }
+.diary-actions span { color: var(--muted); font-size: 0.74rem; }
+@media (max-width: 800px) { .title-nav { padding-right: 98px; } .title-nav-links { gap: 12px; font-size: 0.78rem; } .title-hero-inner { grid-template-columns: 130px minmax(0, 1fr); gap: 22px; min-height: 0; padding-top: 34px; } .title-copy h1 { font-size: clamp(2.2rem, 9vw, 4rem); } .title-overview { font-size: 0.9rem; } .title-facts-section { grid-template-columns: 1fr; gap: 26px; } .cast-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } .title-diary-section { display: block; } .diary-actions { margin-top: 22px; } }
+@media (max-width: 520px) { .title-nav-links a:first-child { display: none; } .title-hero-inner { grid-template-columns: 1fr; align-items: start; } .title-poster { width: 150px; } .title-backdrop-shade { background: linear-gradient(0deg, var(--background) 0%, color-mix(in srgb, var(--background) 75%, transparent) 100%); } .title-facts { grid-template-columns: 1fr; } .cast-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; } }
+
 .donation-page { min-height: 100vh; padding: 24px clamp(20px, 5vw, 72px) 72px; }
 .donation-hero, .donation-card { max-width: 760px; margin-right: auto; margin-left: auto; }
 .donation-hero { margin-top: 112px; }
