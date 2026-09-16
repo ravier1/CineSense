@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState, type CSSProperties } from "react";
 import type { DiscoveryItem } from "../../lib/tmdb-discovery";
 
@@ -38,5 +39,5 @@ export function MediaCard({ item }: { item: DiscoveryItem }) {
   const style = { "--poster-accent": posterAccent } as CSSProperties;
   const mediaPath = item.kind === "Series" ? "tv" : "movie";
 
-  return <a className="media-card" style={style} href={`https://www.themoviedb.org/${mediaPath}/${item.id}`} target="_blank" rel="noreferrer" aria-label={`Open ${item.title} on TMDB`}><div className="media-poster">{item.posterUrl ? <Image src={item.posterUrl} alt={`${item.title} poster`} fill sizes="(max-width: 700px) 42vw, 170px" onLoad={(event) => setPosterAccent(samplePosterColor(event.currentTarget))} /> : <span>{item.title}</span>}<span className="media-rating">★ {item.rating}</span></div><h3>{item.title}</h3><p>{item.year || "Coming soon"} · {item.kind}</p></a>;
+  return <Link className="media-card" style={style} href={`/title/${mediaPath}/${item.id}`} aria-label={`Open details for ${item.title}`}><div className="media-poster">{item.posterUrl ? <Image src={item.posterUrl} alt={`${item.title} poster`} fill sizes="(max-width: 700px) 42vw, 170px" onLoad={(event) => setPosterAccent(samplePosterColor(event.currentTarget))} /> : <span>{item.title}</span>}<span className="media-rating">&#9733; {item.rating}</span></div><h3>{item.title}</h3><p>{item.year || "Coming soon"} &middot; {item.kind}</p></Link>;
 }
